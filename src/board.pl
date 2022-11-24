@@ -75,6 +75,13 @@ spacing(2) :- write('   ').
 spacing(3) :- write('  ').
 spacing(X) :- (X>3 -> write(' ')).
 
+
+% Convert Num to Letter and Letter to Num
+/*
+    numToABC(0, X) : X -> 'I'
+    numToABC(X, 'B'): X -> 7
+*/
+
 numToABC(0, 'I').
 numToABC(1, 'H').
 numToABC(2, 'G'). 
@@ -84,5 +91,8 @@ numToABC(5, 'D').
 numToABC(6, 'C'). 
 numToABC(7, 'B'). 
 numToABC(8, 'A').
+
+
+% Last cell selector
 
 lastCellNum(X, O) :- (X < 5 -> O is X + 5 ; O is 5 + (8-X)).
