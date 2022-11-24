@@ -6,24 +6,22 @@
    2 - player 2 
 */
 
-initBoard(Board) :-
-    Board = 
-       [[0 , 0, 0, 0, 0,-2,-2 ,-2,-2],
-        [0 , 0, 0, 0, 0, 0,-2 ,-2,-2],
-        [0 , 0, 0, 0, 0, 0, 0 ,-2,-2],
-        [0 , 0, 0, 0, 0, 0, 0 ,0 ,-2],
+initBoard(Board) :- Board = 
+       [[0 , 0, 0, 0, 0,-3,-3 ,-3,-3],
+        [0 , 0, 0, 0, 0, 0,-3 ,-3,-3],
+        [0 , 0, 0, 0, 0, 0, 0 ,-3,-3],
+        [0 , 0, 0, 0, 0, 0, 0 ,0 ,-3],
         [0 , 0, 0, 0, 0, 0, 0 ,0 , 0],
         [-2, 0, 0, 0, 0, 0, 0 ,0 , 0],
         [-2,-2, 0, 0, 0, 0, 0 ,0 , 0],
         [-2,-2,-2, 0, 0, 0, 0 ,0 , 0],
-        [-2,-2,-2,-2, 0, 0, 0 ,0 , 0]
-].
+        [-2,-2,-2,-2, 0, 0, 0 ,0 , 0]].
     
 
 % Display the board
 /* e.g.
-    -     1 2 3 4 5
-    I     - - - - -
+    -     1 2 3 4
+    I     - - - - - 5
     H    - - - - - - 6
     G   - - - - - - - 7
     F  - - - - - - - - 8
@@ -31,23 +29,26 @@ initBoard(Board) :-
     D  - - - - - - - - 8
     C   - - - - - - - 7
     B    - - - - - - 6
-    A     - - - - -
-          1 2 3 4 5
+    A     - - - - - 5
+          1 2 3 4
 
 */
 
 displayBoard(Board) :-
-    write('  0 1 2 3 4 5 6 7 8 9'), nl,
+    write('       1 2 3 4 5'), nl,
     displayBoard(Board, 0).
 
 displayBoard([], _).
 displayBoard([H|T], N) :-
-    write(N), write(' '),
+    numToABC(N, RowLetter),
+    write(RowLetter), write(' '),
     spacing(N),
-    displayRow(H),
+    lastCellNum(N, LastCellNum),
+    displayRow(H, LastCellNum),
     nl,
     NewN is N + 1,
-    displayBoard(T, NewN).
+    displayBoard(T, NewN),
+    fail.
 
 
 % Display a row of the board
@@ -55,21 +56,33 @@ displayBoard([H|T], N) :-
     A     - - - - -
 */
 
-displayRow([]) :-
-    nl.
-displayRow([H|T]) :-
-    ((H == -2 -> write(' '));
+displayRow([], C) :-  write(' '), write(C),  nl.
+displayRow([H|T], C) :-
+    ((H == -3 -> write(''));
+    (H == -2 -> write(' '));
     (H == -1 -> write('X '));
     (H == 0 -> write('- '));
     (H == 1 -> write('1 '));
     (H == 2 -> write('2 '))),
-    displayRow(T).
+    displayRow(T, C).
  
 
 % Add spacing to the board
 
-spacing(0) :- write('    ').
-spacing(1) :- write('   ').
-spacing(2) :- write('  ').
-spacing(3) :- write(' ').
-spacing(X) :- (X>3 -> write('')).
+spacing(0) :- write('     ').
+spacing(1) :- write('    ').
+spacing(2) :- write('   ').
+spacing(3) :- write('  ').
+spacing(X) :- (X>3 -> write(' ')).
+
+numToABC(0, 'I').
+numToABC(1, 'H').
+numToABC(2, 'G'). 
+numToABC(3, 'F'). 
+numToABC(4, 'E'). 
+numToABC(5, 'D'). 
+numToABC(6, 'C'). 
+numToABC(7, 'B'). 
+numToABC(8, 'A').
+
+lastCellNum(X, O) :- (X < 5 -> O is X + 5 ; O is 5 + (8-X)).
