@@ -7,15 +7,15 @@
 */
 
 initBoard(Board) :- Board = 
-       [[0 , 0, 0, 0, 0,-3,-3 ,-3,-3],
-        [0 , 0, 0, 0, 0, 0,-3 ,-3,-3],
-        [0 , 0, 0, 0, 0, 0, 0 ,-3,-3],
-        [0 , 0, 0, 0, 0, 0, 0 ,0 ,-3],
-        [0 , 0, 0, 0, 0, 0, 0 ,0 , 0],
-        [-2, 0, 0, 0, 0, 0, 0 ,0 , 0],
-        [-2,-2, 0, 0, 0, 0, 0 ,0 , 0],
-        [-2,-2,-2, 0, 0, 0, 0 ,0 , 0],
-        [-2,-2,-2,-2, 0, 0, 0 ,0 , 0]].
+       [[1 , 1, 1, 1, 1,-3,-3,-3,-3],
+        [0 , 1, 1, 1, 1, 0,-3,-3,-3],
+        [0 , 0, 1, 1, 1, 0, 0,-3,-3],
+        [0 , 0, 0, 0, 0, 0, 0, 0,-3],
+        [0 , 0, 0, 0, 0, 0, 0, 0, 0],
+        [-2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [-2,-2, 0, 0, 2, 2, 2, 0, 0],
+        [-2,-2,-2, 0, 2, 2, 2, 2, 0],
+        [-2,-2,-2,-2, 2, 2, 2, 2, 2]].
     
 
 % Display the board
@@ -38,7 +38,7 @@ displayBoard(Board) :-
     write('       1 2 3 4 5'), nl,
     displayBoard(Board, 0).
 
-displayBoard([], _).
+displayBoard([], _):- !.
 displayBoard([H|T], N) :-
     numToABC(N, RowLetter),
     write(RowLetter), write(' '),
@@ -47,8 +47,7 @@ displayBoard([H|T], N) :-
     displayRow(H, LastCellNum),
     nl,
     NewN is N + 1,
-    displayBoard(T, NewN),
-    fail.
+    displayBoard(T, NewN).
 
 
 % Display a row of the board
@@ -62,8 +61,8 @@ displayRow([H|T], C) :-
     (H == -2 -> write(' '));
     (H == -1 -> write('X '));
     (H == 0 -> write('- '));
-    (H == 1 -> write('1 '));
-    (H == 2 -> write('2 '))),
+    (H == 1 -> write('X '));
+    (H == 2 -> write('O '))),
     displayRow(T, C).
  
 

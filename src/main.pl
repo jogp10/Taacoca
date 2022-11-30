@@ -1,3 +1,4 @@
+:- ensure_loaded(board).
 
 % Display the main menu
 
