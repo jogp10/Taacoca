@@ -1,4 +1,5 @@
 :- ensure_loaded(board).
+:- use_module(library(lists)).
 
 % Display the main menu
 
@@ -27,12 +28,22 @@ play(Player1, Player2) :-
 
 play(Player1, Player2, Board, Turn) :-
     displayBoard(Board),
-    (Player1 == p -> write('Player 1 turn:'), nl, read(X1), read(Y1), read(X2), read(Y2)),
-    (Player1 == c -> write('Computer 1 turn:'), nl, computerMove(Board, X1, Y1, X2, Y2)),
-    move(Board, X1, Y1, X2, Y2, NewBoard, Player1),
-    (Player2 == p -> write('Player 2 turn:'), nl, read(X1), read(Y1), read(X2), read(Y2)),
-    (Player2 == c -> write('Computer 2 turn:'), nl, computerMove(NewBoard, X1, Y1, X2, Y2)),
-    move(NewBoard, X1, Y1, X2, Y2, NewBoard2, Player2),
+    (Player1 == p -> write('Player 1 turn:'), nl, ask_for_positions(X1, Y1, X2, Y2, X3, Y3), ask_for_direction(Direction)),
+    
+    %(Player1 == c -> write('Computer 1 turn:'), nl, computerMove(Board, X1, Y1, X2, Y2)),
+    get_new_position(Board,X1,Y1,Direction,A,B),
+    move_piece(Board, Y1, X1, B, A, NewBoard),
+
+    get_new_position(NewBoard,X2,Y2,Direction,C,D),
+    move_piece(NewBoard, Y2, X2, D, C, NewBoard2),
+
+    get_new_position(Board,X3,Y3,Direction,E,F),
+    move_piece(NewBoard2, Y3, X3, F, E, NewBoard3),
+   
+    
+    %(Player2 == p -> write('Player 2 turn:'), nl, read(X1), read(Y1), read(X2), read(Y2)),
+    % (Player2 == c -> write('Computer 2 turn:'), nl, computerMove(NewBoard, X1, Y1, X2, Y2)),
+    % move(NewBoard, X1, Y1, X2, Y2, NewBoard2, Player2),
     NewTurn is Turn + 1,
-    play(Player1, Player2, NewBoard2, NewTurn).
+    play(Player1, Player2, NewBoard3, NewTurn).
 
