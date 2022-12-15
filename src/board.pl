@@ -1,5 +1,8 @@
 :- use_module(library(lists)).
 
+% Define the directions of the board
+directions([nw, ne, e, se, sw, w]).
+
 % Initiate the board
 /* e.g.
   -2 - out of bounds
@@ -8,7 +11,7 @@
    2 - player 2 
 */
 
-initBoard(Board) :- Board = 
+initial_state(Board) :- Board = 
        [[1 , 1, 1, 1, 1,-3,-3,-3,-3],
         [0 , 1, 1, 1, 1, 0,-3,-3,-3],
         [0 , 0, 1, 1, 1, 0, 0,-3,-3],
@@ -36,20 +39,20 @@ initBoard(Board) :- Board =
 
 */
 
-displayBoard(Board) :-
+display_game(Board) :-
     write('       1 2 3 4 5'), nl,
-    displayBoard(Board, 0).
+    display_game(Board, 0).
 
-displayBoard([], _):- !.
-displayBoard([H|T], N) :-
-    numToABC(N, RowLetter),
+display_game([], _):- !.
+display_game([H|T], R) :-
+    num_letter(R, RowLetter),
     write(RowLetter), write(' '),
-    spacing(N),
-    lastCellNum(N, LastCellNum),
-    displayRow(H, LastCellNum),
+    spacing(R),
+    last_num_cell(R, N),
+    display_row(H, N),
     nl,
-    NewN is N + 1,
-    displayBoard(T, NewN).
+    NewR is R + 1,
+    display_game(T, NewR).
 
 
 % Display a row of the board
@@ -57,15 +60,15 @@ displayBoard([H|T], N) :-
     A     - - - - -
 */
 
-displayRow([], C) :-  write(' '), write(C),  nl.
-displayRow([H|T], C) :-
+display_row([], C) :-  write(' '), write(C),  nl.
+display_row([H|T], C) :-
     ((H == -3 -> write(''));
     (H == -2 -> write(' '));
     (H == -1 -> write('X '));
     (H == 0 -> write('- '));
     (H == 1 -> write('X '));
     (H == 2 -> write('O '))),
-    displayRow(T, C).
+    display_row(T, C).
  
 
 % Add spacing to the board
@@ -79,28 +82,27 @@ spacing(X) :- (X>3 -> write(' ')).
 
 % Convert Num to Letter and Letter to Num
 /*
-    numToABC(0, X) : X -> 'I'
-    numToABC(X, 'B'): X -> 7
+    num_letter(0, X) : X -> 'I'
+    num_letter(X, 'B'): X -> 7
 */
-
-numToABC(0, 'I').
-numToABC(1, 'H').
-numToABC(2, 'G'). 
-numToABC(3, 'F'). 
-numToABC(4, 'E'). 
-numToABC(5, 'D'). 
-numToABC(6, 'C'). 
-numToABC(7, 'B'). 
-numToABC(8, 'A').
+num_letter(0, 'I').
+num_letter(1, 'H').
+num_letter(2, 'G'). 
+num_letter(3, 'F'). 
+num_letter(4, 'E'). 
+num_letter(5, 'D'). 
+num_letter(6, 'C'). 
+num_letter(7, 'B'). 
+num_letter(8, 'A').
 
 
 % Last cell selector
 
-lastCellNum(X, O) :- (X < 5 -> O is X + 5 ; O is 5 + (8-X)).
+last_num_cell(X, O) :- (X < 5 -> O is X + 5 ; O is 5 + (8-X)).
+
 
 % Ask for the positions of the pieces
-
-ask_for_positions(X1, Y1, X2, Y2, X3, Y3) :-
+pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     write('Enter the first position (e.g [1,2].) '),
     read([X1, Y1]),
 
@@ -110,47 +112,92 @@ ask_for_positions(X1, Y1, X2, Y2, X3, Y3) :-
     write('Enter the third position (e.g [1,2].) '),
     read([X3, Y3]).
 
-ask_for_direction(Direction) :-
+
+move_dir(Direction) :-
     nl,
 
     write('   North-West(1)    North-East(2)'), nl,
     write('West(3)                       East(4)'), nl,
     write('   South-West(5)    South-East(6)'), nl,
 
-
     write('Enter the direction in which you want to move (Choose from 1 to 8): '),
     read(Direction).
 
+
+% offset for the board
+offset(6, 1).
+offset(7, 2).
+offset(8, 3).
+offset(9, 4).
+
+
 % Move a piece in the board
-move_piece(Board, FromRow, FromCol, ToRow, ToCol, NewBoard) :-
+move_piece(Board, (FromRow, FromCol), (ToRow, ToCol), NewBoard) :-
+
+    % Convert the position to the correct format
+    offset(FromRow, Offset),
+    FromCol1 is FromCol + Offset,
+    ToCol1 is ToCol + Offset,
 
     % First, retrieve the piece at the source position
     nth1(FromRow, Board, Row),
     write(Row),nl,
-    nth1(FromCol, Row, Piece),
+    nth1(FromCol1, Row, Piece),
 
     % Then, replace the source position with an empty space
-    replace(Row, FromCol, 0, NewRow),
+    replace(Row, FromCol1, 0, NewRow),
     replace(Board, FromRow, NewRow, BoardWithoutPiece),
 
     % Finally, place the piece at the destination position
     nth1(ToRow, BoardWithoutPiece, ToRowData),
-    replace(ToRowData, ToCol, Piece, NewToRowData),
+    replace(ToRowData, ToCol1, Piece, NewToRowData),
     replace(BoardWithoutPiece, ToRow, NewToRowData, NewBoard).
+
 
 % Replace an element in a list
 replace([_|T], 1, X, [X|T]).
 replace([H|T], I, X, [H|R]) :- I > 1, I1 is I-1, replace(T, I1, X, R).
 
-%1-North, 2-North-West, 3-North-East, 4-West, 5-East, 6-South-West, 7-South-East, 8-South
-get_new_position(Board,X1,Y1,Direction,A,B) :-
-    ((Direction == 1 -> A is X1-1, B is Y1-1);
-    (Direction == 2 -> A is X1, B is Y1-1);
-    (Direction == 3 -> A is X1-1, B is Y1);
-    (Direction == 4 -> A is X1+1, B is Y1);
-    (Direction == 5 -> A is X1, B is Y1+1);
-    (Direction == 6 -> A is X1+1, B is Y1+1);).
+
+% Define the neighbors of a given position on the hexagonal board.
+neighbors((X, Y), [NW, NE, E, SE, SW, W]) :-
+    directions(Dirs),
+    % Compute the coordinates of the neighbors in each direction.
+    maplist(neighbor(X, Y), Dirs, [NW, NE, E, SE, SW, W]).
 
 
+% Define a helper predicate to compute the coordinates of a neighbor in a given direction.
+neighbor((X,Y), (NEW_X, NEW_Y), Dir) :-
+    ((Dir == 1; Dir == nw), NEW_X is X-1, NEW_Y is Y-1;
+    (Dir == 2; Dir == ne), NEW_X is X, NEW_Y is Y-1;
+    (Dir == 3; Dir == w), NEW_X is X-1, NEW_Y is Y;
+    (Dir == 4; Dir == e), NEW_X is X+1, NEW_Y is Y;
+    (Dir == 5; Dir == sw), NEW_X is X, NEW_Y is Y+1;
+    (Dir == 6; Dir == se), NEW_X is X+1, NEW_Y is Y+1).
 
 
+% Return a list of posible moves for a piece.
+valid_moves(Board, [P1, P2, P3], Moves) :-
+
+    neighbors(P1, Neighbors),
+    include(within_bounds(Board), Neighbors, Moves1),
+
+    neighbors(P2, Neighbors),
+    include(within_bounds(Board), Neighbors, Moves2),
+
+    neighbors(P3, Neighbors),
+    include(within_bounds(Board), Neighbors, Moves3),
+
+    % Compute the intersection of the sets of valid moves for the three positions.
+    intersection(Moves1, Moves2, Moves12),
+    intersection(Moves12, Moves3, Moves).
+
+% Check if position is within the board
+within_bounds(Board, (X, Y)) :-
+    length(Board, N),
+    X > 0, X =< N,
+    Y > 0, Y =< N,
+    nth1(Y, Board, Row),
+    nth1(X, Row, Cell),
+    Cell \= -2,
+    Cell \= -3.
