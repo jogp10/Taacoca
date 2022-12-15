@@ -41,9 +41,9 @@ initial_state(Board) :- Board =
 
 display_game(Board) :-
     write('       1 2 3 4 5'), nl,
-    display_game(Board, 0).
+    display_game(Board, 1).
 
-display_game([], _):- !.
+display_game([], _).
 display_game([H|T], R) :-
     num_letter(R, RowLetter),
     write(RowLetter), write(' '),
@@ -59,7 +59,6 @@ display_game([H|T], R) :-
 /* e.g.
     A     - - - - -
 */
-
 display_row([], C) :-  write(' '), write(C),  nl.
 display_row([H|T], C) :-
     ((H == -1 -> write(''));
@@ -69,17 +68,16 @@ display_row([H|T], C) :-
     display_row(T, C).
  
 
-% Add spacing to the board
-
-spacing(0) :- write('     ').
-spacing(1) :- write('    ').
-spacing(2) :- write('   ').
-spacing(3) :- write('  ').
-spacing(4) :- write(' ').
-spacing(8) :- write('     ').
-spacing(7) :- write('    ').
-spacing(6) :- write('   ').
-spacing(5) :- write('  ').
+% Add spacing/indexing to the board
+spacing(1) :- write('     ').
+spacing(2) :- write('    ').
+spacing(3) :- write('   ').
+spacing(4) :- write('  ').
+spacing(5) :- write(' ').
+spacing(9) :- write('     ').
+spacing(8) :- write('    ').
+spacing(7) :- write('   ').
+spacing(6) :- write('  ').
 
 
 % Convert Num to Letter and Letter to Num
@@ -87,32 +85,46 @@ spacing(5) :- write('  ').
     num_letter(0, X) : X -> 'I'
     num_letter(X, 'B'): X -> 7
 */
-num_letter(0, 'I').
-num_letter(1, 'H').
-num_letter(2, 'G'). 
-num_letter(3, 'F'). 
-num_letter(4, 'E'). 
-num_letter(5, 'D'). 
-num_letter(6, 'C'). 
-num_letter(7, 'B'). 
-num_letter(8, 'A').
+num_letter(1, 'i').
+num_letter(2, 'h').
+num_letter(3, 'g').
+num_letter(4, 'f').
+num_letter(5, 'e'). 
+num_letter(6, 'd').
+num_letter(7, 'c'). 
+num_letter(8, 'b'). 
+num_letter(9, 'a').
 
 
 % Last cell selector
-
 last_num_cell(X, O) :- (X < 5 -> O is X + 5 ; O is 5 + (8-X)).
 
 
 % Ask for the positions of the pieces
 pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
-    write('Enter the first position (e.g [1,2].) '),
-    read([X1, Y1]),
+    write('Enter the first position (e.g. a2.) '),
+    read(C1),
+    sub_atom(C1, 0, 1, After11, Y1_LETTER),
+    sub_atom(C1, 1, 1, After12, X1_CHAR),
+    num_letter(Y1, Y1_LETTER),
+    atom_codes(X1_CHAR, X1_CHAR_LIST),
+    number_codes(X1, X1_CHAR_LIST),
 
-    write('Enter the second position (e.g [1,2].) '),
-    read([X2, Y2]),
+    write('Enter the second position (e.g. a2.) '),
+    read(C2),
+    sub_atom(C2, 0, 1, After21, Y2_LETTER),
+    sub_atom(C2, 1, 1, After22, X2_CHAR),
+    num_letter(Y2, Y2_LETTER),
+    atom_codes(X2_CHAR, X2_CHAR_LIST),
+    number_codes(X2, X2_CHAR_LIST),
 
-    write('Enter the third position (e.g [1,2].) '),
-    read([X3, Y3]).
+    write('Enter the third position (e.g. a2.) '),
+    read(C3),
+    sub_atom(C3, 0, 1, After31, Y3_LETTER),
+    sub_atom(C3, 1, 1, After32, X3_CHAR),
+    num_letter(Y3, Y3_LETTER),
+    atom_codes(X3_CHAR, X3_CHAR_LIST),
+    number_codes(X3, X3_CHAR_LIST).
 
 
 move_dir(Direction) :-

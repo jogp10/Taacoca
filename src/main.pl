@@ -33,15 +33,15 @@ play(Player1, Player2, Board, Turn) :-
     move_dir(Direction),
 
     neighbor(X1, Y1, Direction, (A, B)),
-    write(A-B), nl,
+    num_letter(B, B_LETTER), write(B_LETTER), write(A), nl,
     move_piece(Board, (Y1, X1), (B, A), NewBoard),
 
     neighbor(X2, Y2, Direction, (C, D)),
-    write(C-D), nl,
+    num_letter(D, D_LETTER), write(D_LETTER), write(C), nl,
     move_piece(NewBoard, (Y2, X2), (D, C), NewBoard2),
 
     neighbor(X3, Y3, Direction, (E, F)),
-    write(E-F), nl,
+    num_letter(F, F_LETTER), write(F_LETTER), write(E), nl,
     move_piece(NewBoard2, (Y3, X3), (F, E), NewBoard3),
 
     %(Player1 == c -> write('Computer 1 turn:'), nl, computerMove(Board, X1, Y1, X2, Y2)),
