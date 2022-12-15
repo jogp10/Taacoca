@@ -27,18 +27,21 @@ play(Player1, Player2) :-
 
 play(Player1, Player2, Board, Turn) :-
     display_game(Board),
-    (Player1 == p -> write('Player 1 turn:'), nl, pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)), move_dir(Direction)),
-    
-    neighbor((X1,Y1), (A, B), Direction),
+    (Player1 == p -> write('Player 1 turn:'), nl, pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3))),
+    valid_moves(Board, [(Y1, X1), (Y2, X2), (Y3, X3)], Moves),
+    write(Moves), nl,
+    move_dir(Direction),
+
+    neighbor(X1, Y1, Direction, (A, B)),
     write(A-B), nl,
     move_piece(Board, (Y1, X1), (B, A), NewBoard),
 
-    neighbor((X2,Y2), (C, D), Direction),
+    neighbor(X2, Y2, Direction, (C, D)),
     write(C-D), nl,
     move_piece(NewBoard, (Y2, X2), (D, C), NewBoard2),
 
-    neighbor((X3,Y3), (E, F), Direction),
-    write(F-E), nl,
+    neighbor(X3, Y3, Direction, (E, F)),
+    write(E-F), nl,
     move_piece(NewBoard2, (Y3, X3), (F, E), NewBoard3),
 
     %(Player1 == c -> write('Computer 1 turn:'), nl, computerMove(Board, X1, Y1, X2, Y2)),
