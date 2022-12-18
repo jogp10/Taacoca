@@ -214,3 +214,27 @@ intersection([H|T], B, C) :-
 intersection([H|T], B, C) :-
     \+ member(H, B),
     intersection(T, B, C).
+
+check_player1_pieces(Board) :-
+    % iterate through each position on the board
+    maplist(player1_row_pieces, Board).
+
+player1_row_pieces(Row) :-
+    % check if there are any player 1 pieces in the row
+    maplist(not_player1piece, Row).
+
+not_player1piece(Piece) :-
+    % return true if the piece is not player 1
+    Piece \= 1.
+
+check_player2_pieces(Board) :-
+    % iterate through each position on the board
+    maplist(player2_row_pieces, Board).
+
+player2_row_pieces(Row) :-
+    % check if there are any player 1 pieces in the row
+    maplist(not_player2piece, Row).
+
+not_player1piece(Piece) :-
+    % return true if the piece is not player 1
+    Piece \= 2.
