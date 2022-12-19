@@ -167,14 +167,15 @@ neighbors((X, Y), [NW, NE, E, SE, SW, W]) :-
     maplist(neighbor(X, Y), Dirs, [NW, NE, E, SE, SW, W]).
 
 
-% Define a helper predicate to compute the coordinates of a neighbor in a given direction.
+% Define a helper predicate to comp~ute the coordinates of a neighbor in a given direction.
 neighbor(X, Y, Dir, (NEW_X, NEW_Y)) :-
-    ((Dir == 1; Dir == nw), NEW_X is X, NEW_Y is Y-1;
+    ((Dir == 1; Dir == nw), NEW_X is X
+    , NEW_Y is Y-1;
     (Dir == 2; Dir == ne), NEW_X is X+1, NEW_Y is Y-1;
     (Dir == 3; Dir == w), NEW_X is X-1, NEW_Y is Y;
     (Dir == 4; Dir == e), NEW_X is X+1, NEW_Y is Y;
-    (Dir == 5; Dir == sw), NEW_X is X-1, NEW_Y is Y+1;
-    (Dir == 6; Dir == se), NEW_X is X, NEW_Y is Y+1).
+    (Dir == 5; Dir == sw), NEW_X is X, NEW_Y is Y+1;
+    (Dir == 6; Dir == se), NEW_X is X+1, NEW_Y is Y+1).
 
 
 % Return a list of posible moves for a piece.
