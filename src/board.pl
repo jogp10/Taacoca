@@ -10,7 +10,6 @@ directions([nw, ne, e, se, sw, w]).
    1 - player 1
    2 - player 2 
 */
-
 initial_state(Board) :- Board = 
        [    [1 , 1, 1, 1, 1],
            [0 , 1, 1, 1, 1, 0],
@@ -38,7 +37,6 @@ initial_state(Board) :- Board =
           1 2 3 4
 
 */
-
 display_game(Board) :-
     write('       1 2 3 4 5'), nl,
     display_game(Board, 1).
@@ -127,14 +125,14 @@ pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     number_codes(X3, X3_CHAR_LIST).
 
 
-move_dir(Direction) :-
-    nl,
+move_dir(Direction, ValidMoves) :-
+    write('Valid Moves: '), write(ValidMoves), nl,
 
     write('   North-West(1)    North-East(2)'), nl,
     write('West(3)                       East(4)'), nl,
     write('   South-West(5)    South-East(6)'), nl,
 
-    write('Enter the direction in which you want to move (Choose from 1 to 6): '),
+    write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves): '),
     read(Direction).
 
 
@@ -167,10 +165,9 @@ neighbors((X, Y), [NW, NE, E, SE, SW, W]) :-
     maplist(neighbor(X, Y), Dirs, [NW, NE, E, SE, SW, W]).
 
 
-% Define a helper predicate to comp~ute the coordinates of a neighbor in a given direction.
+% Define a helper predicate to compute the coordinates of a neighbor in a given direction.
 neighbor(X, Y, Dir, (NEW_X, NEW_Y)) :-
-    ((Dir == 1; Dir == nw), NEW_X is X
-    , NEW_Y is Y-1;
+    ((Dir == 1; Dir == nw), NEW_X is X, NEW_Y is Y-1;
     (Dir == 2; Dir == ne), NEW_X is X+1, NEW_Y is Y-1;
     (Dir == 3; Dir == w), NEW_X is X-1, NEW_Y is Y;
     (Dir == 4; Dir == e), NEW_X is X+1, NEW_Y is Y;
@@ -190,9 +187,21 @@ valid_moves(Board, [P1, P2, P3], Moves) :-
     directions(Dirs3),
     include(within_bounds(Board, P3), Dirs3, Moves3),
 
+    directions(Dirs4),
+    include(not_occupied(Board, P1, [P2, P3]), Dirs4, Moves4),
+
+    directions(Dirs5),
+    include(not_occupied(Board, P2, [P1, P3]), Dirs5, Moves5),
+
+    directions(Dirs6),
+    include(not_occupied(Board, P3, [P1, P2]), Dirs6, Moves6),
+
     % Compute the intersection of the sets of valid moves for the three positions.
     intersection(Moves1, Moves2, Moves12),
-    intersection(Moves12, Moves3, Moves).
+    intersection(Moves12, Moves3, Moves123),
+    intersection(Moves4, Moves5, Moves45),
+    intersection(Moves45, Moves6, Moves456),
+    intersection(Moves123, Moves456, Moves).
 
 
 % Check if position is within the board
@@ -206,6 +215,25 @@ within_bounds(Board, (X, Y), Dir) :-
     NEW_X > 0, NEW_X =< N2.
 
 
+% Check if position is not occupied either by a own piece that is not in the list of pieces to move
+not_occupied(Board, (X, Y), [(X1, Y1), (X2, Y2)], Dir) :-
+    player_piece(Board, (X,Y), PlayerPieceNumber),
+    neighbor(X, Y, Dir, (NEW_X, NEW_Y)),
+
+    ((NEW_X == X1, NEW_Y == Y1);
+    (NEW_X == X2, NEW_Y == Y2);
+
+    (nth1(NEW_Y, Board, Row),
+    nth1(NEW_X, Row, Cell),
+    \+(Cell =:= PlayerPieceNumber))).
+
+
+% Player piece number
+player_piece(Board, (X, Y), PlayerPieceNumber) :-
+    nth1(Y, Board, Row),
+    nth1(X, Row, PlayerPieceNumber).
+
+
 % intersection(A, B, C) return the intersection of sets A and B.
 intersection([], _, []).
 intersection([H|T], B, C) :-
@@ -215,6 +243,7 @@ intersection([H|T], B, C) :-
 intersection([H|T], B, C) :-
     \+ member(H, B),
     intersection(T, B, C).
+
 
 check_player1_pieces(Board) :-
     % iterate through each position on the board

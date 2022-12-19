@@ -28,9 +28,8 @@ play(Player1, Player2) :-
 play(Player1, Player2, Board, Turn) :-
     display_game(Board),
     (Player1 == p -> write('Player 1 turn:'), nl, pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3))),
-    valid_moves(Board, [(Y1, X1), (Y2, X2), (Y3, X3)], Moves),
-    write(Moves), nl,
-    move_dir(Direction),
+    valid_moves(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], ValidMoves),
+    move_dir(Direction, ValidMoves),
 
     neighbor(X1, Y1, Direction, (A, B)),
     num_letter(B, B_LETTER), write(B_LETTER), write(A), nl,
