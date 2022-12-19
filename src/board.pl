@@ -12,21 +12,21 @@ offset(_, 0).
 
 % Initiate the board
 /* e.g.
-  -2 - out of bounds
+  -1 - out of bounds
    0 - empty
    1 - player 1
    2 - player 2 
 */
 initial_state(Board) :- Board = 
-       [[1 , 1, 1, 1, 1,-3,-3,-3,-3],
-        [0 , 1, 1, 1, 1, 0,-3,-3,-3],
-        [0 , 0, 1, 1, 1, 0, 0,-3,-3],
-        [0 , 0, 0, 0, 0, 0, 0, 0,-3],
+       [[1 , 1, 1, 1, 1,-1,-1,-1,-1],
+        [0 , 1, 1, 1, 1, 0,-1,-1,-1],
+        [0 , 0, 1, 1, 1, 0, 0,-1,-1],
+        [0 , 0, 0, 0, 0, 0, 0, 0,-1],
         [0 , 0, 0, 0, 0, 0, 0, 0, 0],
-        [-2, 0, 0, 0, 0, 0, 0, 0, 0],
-        [-2,-2, 0, 0, 2, 2, 2, 0, 0],
-        [-2,-2,-2, 0, 2, 2, 2, 2, 0],
-        [-2,-2,-2,-2, 2, 2, 2, 2, 2]].
+        [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [-1,-1, 0, 0, 2, 2, 2, 0, 0],
+        [-1,-1,-1, 0, 2, 2, 2, 2, 0],
+        [-1,-1,-1,-1, 2, 2, 2, 2, 2]].
 
 
 
@@ -70,9 +70,7 @@ display_row([H|T], C) :-
     ((H == -1 -> write(''));
     (H == 0 -> write('- '));
     (H == 1 -> write('X '));
-    (H == 2 -> write('O '));
-    (H == -2 -> write(''));
-    (H == -3 -> write(''))),
+    (H == 2 -> write('O '))),
     display_row(T, C).
  
 
@@ -138,13 +136,7 @@ pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     atom_codes(X3_CHAR, X3_CHAR_LIST),
     number_codes(X3_, X3_CHAR_LIST),
     offset(Y3, Offset3),
-    X3 is Offset3 + X3_,
-
-    write('You have chosen the following positions: '), nl,
-    write('First: '), write(X1), write(Y1), nl,
-    write('Second: '), write(X2), write(Y2), nl,
-    write('Third: '), write(X3), write(Y3), nl,
-    write('Offset: '), write(Offset1), write(Offset2), write(Offset3), nl.
+    X3 is Offset3 + X3_.
 
 
 move_dir(Direction, ValidMoves) :-
@@ -231,10 +223,13 @@ within_bounds(Board, (X, Y), Dir) :-
     neighbor(X, Y, Dir, (NEW_X, NEW_Y)),
 
     length(Board, N1),
-    NEW_Y > 0, NEW_Y =< N1,
     nth1(NEW_Y, Board, Row),
     length(Row, N2),
-    NEW_X > 0, NEW_X =< N2.
+    NEW_Y > 0, NEW_Y =< N1,
+    NEW_X > 0, NEW_X =< N2,
+    nth1(NEW_Y, Board, Row),
+    nth1(NEW_X, Row, Cell),
+    \+(Cell =:= -1).
 
 
 % Check if position is not occupied either by a own piece that is not in the list of pieces to move

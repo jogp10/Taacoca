@@ -32,15 +32,15 @@ play(Player1, Player2, Board, Turn) :-
     move_dir(Direction, ValidMoves),
 
     neighbor(X1, Y1, Direction, (A, B)),
-    num_letter(B, B_LETTER), write(B_LETTER), write(A), nl,
+    num_letter(B, B_LETTER),
     move_piece(Board, (Y1, X1), (B, A), NewBoard),
 
     neighbor(X2, Y2, Direction, (C, D)),
-    num_letter(D, D_LETTER), write(D_LETTER), write(C), nl,
+    num_letter(D, D_LETTER),
     move_piece(NewBoard, (Y2, X2), (D, C), NewBoard2),
 
     neighbor(X3, Y3, Direction, (E, F)),
-    num_letter(F, F_LETTER), write(F_LETTER), write(E), nl,
+    num_letter(F, F_LETTER),
     move_piece(NewBoard2, (Y3, X3), (F, E), NewBoard3),
 
     % check if the game is over
