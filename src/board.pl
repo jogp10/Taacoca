@@ -3,6 +3,11 @@
 % Define the directions of the board
 directions([nw, ne, e, se, sw, w]).
 
+% Define the players
+players([1, 2]).
+player(1, 'X').
+player(2, 'O').
+
 % offset for the board
 offset(6, 1).
 offset(7, 2).
