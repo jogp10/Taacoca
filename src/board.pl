@@ -3,6 +3,13 @@
 % Define the directions of the board
 directions([nw, ne, e, se, sw, w]).
 
+% offset for the board
+offset(6, 1).
+offset(7, 2).
+offset(8, 3).
+offset(9, 4).
+offset(_, 0).
+
 % Initiate the board
 /* e.g.
   -2 - out of bounds
@@ -11,16 +18,17 @@ directions([nw, ne, e, se, sw, w]).
    2 - player 2 
 */
 initial_state(Board) :- Board = 
-       [    [1 , 1, 1, 1, 1],
-           [0 , 1, 1, 1, 1, 0],
-          [0 , 0, 1, 1, 1, 0, 0],
-         [0 , 0, 0, 0, 0, 0, 0, 0],
+       [[1 , 1, 1, 1, 1,-3,-3,-3,-3],
+        [0 , 1, 1, 1, 1, 0,-3,-3,-3],
+        [0 , 0, 1, 1, 1, 0, 0,-3,-3],
+        [0 , 0, 0, 0, 0, 0, 0, 0,-3],
         [0 , 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0],
-          [0, 0, 2, 2, 2, 0, 0],
-           [0, 2, 2, 2, 2, 0],
-            [2, 2, 2, 2, 2]].
-    
+        [-2, 0, 0, 0, 0, 0, 0, 0, 0],
+        [-2,-2, 0, 0, 2, 2, 2, 0, 0],
+        [-2,-2,-2, 0, 2, 2, 2, 2, 0],
+        [-2,-2,-2,-2, 2, 2, 2, 2, 2]].
+
+
 
 % Display the board
 /* e.g.
@@ -62,7 +70,9 @@ display_row([H|T], C) :-
     ((H == -1 -> write(''));
     (H == 0 -> write('- '));
     (H == 1 -> write('X '));
-    (H == 2 -> write('O '))),
+    (H == 2 -> write('O '));
+    (H == -2 -> write(''));
+    (H == -3 -> write(''))),
     display_row(T, C).
  
 
@@ -106,7 +116,9 @@ pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     sub_atom(C1, 1, 1, After12, X1_CHAR),
     num_letter(Y1, Y1_LETTER),
     atom_codes(X1_CHAR, X1_CHAR_LIST),
-    number_codes(X1, X1_CHAR_LIST),
+    number_codes(X1_, X1_CHAR_LIST),
+    offset(Y1, Offset1),
+    X1 is Offset1 + X1_,
 
     write('Enter the second position (e.g. a2.) '),
     read(C2),
@@ -114,7 +126,9 @@ pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     sub_atom(C2, 1, 1, After22, X2_CHAR),
     num_letter(Y2, Y2_LETTER),
     atom_codes(X2_CHAR, X2_CHAR_LIST),
-    number_codes(X2, X2_CHAR_LIST),
+    number_codes(X2_, X2_CHAR_LIST),
+    offset(Y2, Offset2),
+    X2 is Offset2 + X2_,
 
     write('Enter the third position (e.g. a2.) '),
     read(C3),
@@ -122,7 +136,15 @@ pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     sub_atom(C3, 1, 1, After32, X3_CHAR),
     num_letter(Y3, Y3_LETTER),
     atom_codes(X3_CHAR, X3_CHAR_LIST),
-    number_codes(X3, X3_CHAR_LIST).
+    number_codes(X3_, X3_CHAR_LIST),
+    offset(Y3, Offset3),
+    X3 is Offset3 + X3_,
+
+    write('You have chosen the following positions: '), nl,
+    write('First: '), write(X1), write(Y1), nl,
+    write('Second: '), write(X2), write(Y2), nl,
+    write('Third: '), write(X3), write(Y3), nl,
+    write('Offset: '), write(Offset1), write(Offset2), write(Offset3), nl.
 
 
 move_dir(Direction, ValidMoves) :-
@@ -167,8 +189,8 @@ neighbors((X, Y), [NW, NE, E, SE, SW, W]) :-
 
 % Define a helper predicate to compute the coordinates of a neighbor in a given direction.
 neighbor(X, Y, Dir, (NEW_X, NEW_Y)) :-
-    ((Dir == 1; Dir == nw), NEW_X is X, NEW_Y is Y-1;
-    (Dir == 2; Dir == ne), NEW_X is X+1, NEW_Y is Y-1;
+    ((Dir == 1; Dir == nw), NEW_X is X-1, NEW_Y is Y-1;
+    (Dir == 2; Dir == ne), NEW_X is X, NEW_Y is Y-1;
     (Dir == 3; Dir == w), NEW_X is X-1, NEW_Y is Y;
     (Dir == 4; Dir == e), NEW_X is X+1, NEW_Y is Y;
     (Dir == 5; Dir == sw), NEW_X is X, NEW_Y is Y+1;
