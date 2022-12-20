@@ -43,8 +43,13 @@ play(Player1, Player2, Board, Turn) :-
     num_letter(F, F_LETTER),
     move_piece(NewBoard2, (Y3, X3), (F, E), NewBoard3),
 
-    % check if the game is over
-    %(check_player2_pieces(NewBoard3) -> write('Player 1 wins!'), nl, !);
+    %check if the game is over
+    ((check_player2_pieces(NewBoard3) -> write('Player 1 wins!'));
+    (check_player1_in_last_row(NewBoard3) -> write('Player 1 wins!'));
+    true
+    ),
+
+    
     %(Player1 == c -> write('Computer 1 turn:'), nl, computerMove(Board, X1, Y1, X2, Y2)),
 
    

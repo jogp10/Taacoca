@@ -32,6 +32,7 @@ initial_state(Board) :- Board =
         [-1,-1, 0, 0, 2, 2, 2, 0, 0],
         [-1,-1,-1, 0, 2, 2, 2, 2, 0],
         [-1,-1,-1,-1, 2, 2, 2, 2, 2]].
+      
 
 
 
@@ -287,6 +288,26 @@ player2_row_pieces(Row) :-
     % check if there are any player 1 pieces in the row
     maplist(not_player2piece, Row).
 
-not_player1piece(Piece) :-
+not_player2piece(Piece) :-
     % return true if the piece is not player 1
     Piece \= 2.
+
+% Check if piece 1 in last row
+check_player1_in_last_row(Board) :-
+    % gest last row of Board
+    last(Board, LastRow),
+    % check if there are any player 1 pieces in the row
+    write(LastRow),
+    member(1, LastRow).
+    
+% Check if piece 2 in first row
+check_player2_in_first_row(Board) :-
+    % gest first row of Board
+    nth1(1, Board, FirstRow),
+    % check if there are any player 1 pieces in the row
+    write(FirstRow),
+    member(2, FirstRow).
+    
+
+
+
