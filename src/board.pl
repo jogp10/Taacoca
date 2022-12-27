@@ -290,24 +290,11 @@ check_player_in_win_row(Player, Board) :-
     % check if there are any player pieces in the row
     member(Player, Row).
     
-/*
-% Get player pieces coordinates
-% get_pieces(+Player, +Board, -Pieces)
-% Pieces is a list of all the positions (represented as (Row, Col)) on the Board where Player has a piece
-get_pieces(_, [], []).
-get_pieces(Player, [Row|Rest], Pieces) :-
-    get_pieces_in_row(Player, Row, RowPieces),
-    get_pieces(Player, Rest, RestPieces),
-    append(RowPieces, RestPieces, Pieces).
 
-% get_pieces_in_row(+Player, +Row, -Pieces)
-% Pieces is a list of all the positions (Col) in Row where Player has a piece
-get_pieces_in_row(_, [], []).
-get_pieces_in_row(Player, [Elem|Rest], [(Col)|Pieces]) :-
-    Elem = Player,
-    get_pieces_in_row(Player, Rest, Pieces).
-get_pieces_in_row(Player, [_|Rest], Pieces) :-
-    get_pieces_in_row(Player, Rest, Pieces).*/
+% Get player pieces coordinates
+
+get_player_pieces(Board, Player, Pieces) :-
+    findall((X, Y), (nth1(Y, Board, Row), nth1(X, Row, Player)), Pieces).
 
 count_pieces(Board, Player, Count) :-
     findall(1, (member(Row, Board), member(Player, Row)), List),
