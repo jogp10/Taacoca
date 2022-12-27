@@ -143,6 +143,7 @@ pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
     number_codes(X3_, X3_CHAR_LIST),
     offset(Y3, Offset3),
     X3 is Offset3 + X3_.
+  
 
 
 move_dir(Direction, ValidMoves) :-
@@ -152,7 +153,7 @@ move_dir(Direction, ValidMoves) :-
     write('West(3)                       East(4)'), nl,
     write('   South-West(5)    South-East(6)'), nl,
 
-    write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves): '),
+    write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves) '),
     read(Direction).
 
 
@@ -297,7 +298,7 @@ check_player1_in_last_row(Board) :-
     % gest last row of Board
     last(Board, LastRow),
     % check if there are any player 1 pieces in the row
-    write(LastRow),
+
     member(1, LastRow).
     
 % Check if piece 2 in first row
@@ -305,7 +306,6 @@ check_player2_in_first_row(Board) :-
     % gest first row of Board
     nth1(1, Board, FirstRow),
     % check if there are any player 1 pieces in the row
-    write(FirstRow),
     member(2, FirstRow).
     
 
