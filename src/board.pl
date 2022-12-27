@@ -23,13 +23,13 @@ offset(_, 0).
    2 - player 2 
 */
 initial_state(Board) :- Board = 
-       [[1 , 1, 1, 1, 1,-1,-1,-1,-1],
-        [0 , 1, 1, 1, 1, 0,-1,-1,-1],
-        [0 , 0, 1, 1, 1, 0, 0,-1,-1],
+       [[0 , 0, 0, 0, 0,-1,-1,-1,-1],
+        [0 , 2, 0, 0, 0, 0,-1,-1,-1],
+        [0 , 0, 0, 1, 0, 0, 0,-1,-1],
         [0 , 0, 0, 0, 0, 0, 0, 0,-1],
         [0 , 0, 0, 0, 0, 0, 0, 0, 0],
         [-1, 0, 0, 0, 0, 0, 0, 0, 0],
-        [-1,-1, 0, 0, 2, 2, 2, 0, 0],
+        [-1,-1, 0, 0, 0, 2, 2, 0, 0],
         [-1,-1,-1, 0, 2, 2, 2, 2, 0],
         [-1,-1,-1,-1, 2, 2, 2, 2, 2]].
       
@@ -109,40 +109,54 @@ num_letter(9, 'a').
 
 
 % Last cell selector
-last_num_cell(X, O) :- (X < 5 -> O is X + 5 ; O is 5 + (8-X)).
+last_num_cell(X, O) :- (X =< 5 -> O is X + 4 ; O is 5 + (9-X)).
 
 
 % Ask for the positions of the pieces
-pieces_to_move((X1, Y1), (X2, Y2), (X3, Y3)) :-
-    write('Enter the first position (e.g. a2.) '),
+pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :-
+    count_pieces(Board, Player, Count),
+    write('You have '), write(Count), write(' pieces to move.'), nl,
+
+    (Count >= 1 ->
+    (write('Enter the first position (e.g. a2.) '),
     read(C1),
     sub_atom(C1, 0, 1, After11, Y1_LETTER),
     sub_atom(C1, 1, 1, After12, X1_CHAR),
-    num_letter(Y1, Y1_LETTER),
+    num_letter(Y4, Y1_LETTER),
     atom_codes(X1_CHAR, X1_CHAR_LIST),
     number_codes(X1_, X1_CHAR_LIST),
-    offset(Y1, Offset1),
-    X1 is Offset1 + X1_,
+    offset(Y4, Offset1),
+    X4 is Offset1 + X1_)),
 
-    write('Enter the second position (e.g. a2.) '),
+    (Count >= 2 ->
+    (write('Enter the second position (e.g. a2.) '),
     read(C2),
     sub_atom(C2, 0, 1, After21, Y2_LETTER),
     sub_atom(C2, 1, 1, After22, X2_CHAR),
-    num_letter(Y2, Y2_LETTER),
+    num_letter(Y5, Y2_LETTER),
     atom_codes(X2_CHAR, X2_CHAR_LIST),
     number_codes(X2_, X2_CHAR_LIST),
-    offset(Y2, Offset2),
-    X2 is Offset2 + X2_,
+    offset(Y5, Offset2),
+    X5 is Offset2 + X2_);true),
 
-    write('Enter the third position (e.g. a2.) '),
+    (Count >= 3 -> 
+    (write('Enter the third position (e.g. a2.) '),
     read(C3),
     sub_atom(C3, 0, 1, After31, Y3_LETTER),
     sub_atom(C3, 1, 1, After32, X3_CHAR),
-    num_letter(Y3, Y3_LETTER),
+    num_letter(Y6, Y3_LETTER),
     atom_codes(X3_CHAR, X3_CHAR_LIST),
     number_codes(X3_, X3_CHAR_LIST),
-    offset(Y3, Offset3),
-    X3 is Offset3 + X3_.
+    offset(Y6, Offset3),
+    X6 is Offset3 + X3_);true),
+
+    ((Count == 1, X5 = X4, Y5 = Y4, X6 = X4, Y6 = Y4);
+    (Count == 2, X6 = X5, Y6 = Y5);true),
+
+
+    (check_positions(Board, Player, (X4, Y4), (X5, Y5), (X6, Y6)) ->
+     (X1 = X4, X2 = X5, X3 = X6, Y1 = Y4, Y2 = Y5, Y3 = Y6); 
+    pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3))).
   
 
 
@@ -269,45 +283,43 @@ intersection([H|T], B, C) :-
     intersection(T, B, C).
 
 
-check_player1_pieces(Board) :-
-    % iterate through each position on the board
-    maplist(player1_row_pieces, Board).
-
-player1_row_pieces(Row) :-
-    % check if there are any player 1 pieces in the row
-    maplist(not_player1piece, Row).
-
-not_player1piece(Piece) :-
-    % return true if the piece is not player 1
-    Piece \= 1.
-
-check_player2_pieces(Board) :-
-    % iterate through each position on the board
-    maplist(player2_row_pieces, Board).
-
-player2_row_pieces(Row) :-
-    % check if there are any player 1 pieces in the row
-    maplist(not_player2piece, Row).
-
-not_player2piece(Piece) :-
-    % return true if the piece is not player 1
-    Piece \= 2.
-
-% Check if piece 1 in last row
-check_player1_in_last_row(Board) :-
+% Check if piece in winning row
+check_player_in_win_row(Player, Board) :-
     % gest last row of Board
-    last(Board, LastRow),
-    % check if there are any player 1 pieces in the row
-
-    member(1, LastRow).
+    (Player == 1 -> last(Board, Row); nth1(1, Board, Row)),
+    % check if there are any player pieces in the row
+    member(Player, Row).
     
-% Check if piece 2 in first row
-check_player2_in_first_row(Board) :-
-    % gest first row of Board
-    nth1(1, Board, FirstRow),
-    % check if there are any player 1 pieces in the row
-    member(2, FirstRow).
-    
+/*
+% Get player pieces coordinates
+% get_pieces(+Player, +Board, -Pieces)
+% Pieces is a list of all the positions (represented as (Row, Col)) on the Board where Player has a piece
+get_pieces(_, [], []).
+get_pieces(Player, [Row|Rest], Pieces) :-
+    get_pieces_in_row(Player, Row, RowPieces),
+    get_pieces(Player, Rest, RestPieces),
+    append(RowPieces, RestPieces, Pieces).
 
+% get_pieces_in_row(+Player, +Row, -Pieces)
+% Pieces is a list of all the positions (Col) in Row where Player has a piece
+get_pieces_in_row(_, [], []).
+get_pieces_in_row(Player, [Elem|Rest], [(Col)|Pieces]) :-
+    Elem = Player,
+    get_pieces_in_row(Player, Rest, Pieces).
+get_pieces_in_row(Player, [_|Rest], Pieces) :-
+    get_pieces_in_row(Player, Rest, Pieces).*/
 
+count_pieces(Board, Player, Count) :-
+    findall(1, (member(Row, Board), member(Player, Row)), List),
+    length(List, Count).
 
+check_positions(Board, Piece, (Col1, Row1), (Col2, Row2), (Col3, Row3)) :-
+    nth1(Row1, Board, Row),
+    nth1(Col1, Row, P1),
+    P1 == Piece,
+    nth1(Row2, Board, Row_),
+    nth1(Col2, Row_, P2),
+    P2 == Piece,
+    nth1(Row3, Board, Row__),
+    nth1(Col3, Row__, P3),
+    P3 == Piece.
