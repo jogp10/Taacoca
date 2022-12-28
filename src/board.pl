@@ -15,6 +15,15 @@ offset(8, 3).
 offset(9, 4).
 offset(_, 0).
 
+% Define the directions to numbers
+direction_number(nw, 1).
+direction_number(ne, 2).
+direction_number(e, 4).
+direction_number(se, 6).
+direction_number(sw, 5).
+direction_number(w, 3).
+
+
 % Initiate the board
 /* e.g.
   -1 - out of bounds
@@ -168,7 +177,9 @@ move_dir(Direction, ValidMoves) :-
     write('   South-West(5)    South-East(6)'), nl,
 
     write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves) '),
-    read(Direction).
+    read(NumDir),
+    direction_number(Dir, NumDir),
+    (member(Dir, ValidMoves) -> Direction = NumDir; move_dir(Direction, ValidMoves)).
 
 
 % Move a piece in the board

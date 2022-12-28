@@ -4,7 +4,8 @@
 % Select randomly three pieces from the board
 computer_easy_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :- 
     get_player_pieces(Board, Player, Pieces),
-    pick_piece(3, Pieces, [(X1, Y1), (X2, Y2), (X3, Y3)]).
+    pick_piece(3, Pieces, [(X1, Y1), (X2, Y2), (X3, Y3)]),
+    valid_moves(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], ValidMoves).
 
 pick_piece(0, _, []).
 pick_piece(Count, From, [X| Rest]) :-
