@@ -33,7 +33,7 @@ play :-
     read(Difficulty2),
     choose_difficulty(Difficulty2, C2),
     play(C1, C2));
-    (Option == 4 -> write('Bye!'), nl)).
+    (Option == 4 -> write('Bye!'), nl); play).
 
 
 % Choose the computer difficulty
