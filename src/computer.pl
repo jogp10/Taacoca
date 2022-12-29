@@ -6,6 +6,10 @@ computer_easy_move(Board, Player, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction) :-
     length(Pieces, Count),
     (Count > 3 -> PiecesToPick = 3 ; PiecesToPick = Count),
     pick_piece(PiecesToPick, Pieces, [(X4, Y4), (X5, Y5), (X6, Y6)]),
+
+    (Count == 1 -> X5 = X4, Y5 = Y4, X6 = X4, Y6 = Y4;
+    Count == 2 -> X6 = X4, Y6 = Y4; true),
+
     write('Computer selected pieces: '), write([(Y4, X4), (Y5, X5), (Y6, X6)]), nl,
     valid_moves(Board, [(X4, Y4), (X5, Y5), (X6, Y6)], ValidMoves),
     length(ValidMoves, Length),

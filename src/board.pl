@@ -117,11 +117,11 @@ num_letter(8, 'b').
 num_letter(9, 'a').
 
 
-% Last cell selector
+% Last cell number from line
 last_num_cell(X, O) :- (X =< 5 -> O is X + 4 ; O is 5 + (9-X)).
 
 
-% Ask for the positions of the pieces
+% Ask for the pieces that are going to move
 pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :-
     count_pieces(Board, Player, Count),
     write('You have '), write(Count), write(' pieces to move.'), nl,
@@ -168,7 +168,7 @@ pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :-
     pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3))).
   
 
-
+% Choose moving direction from valid directions
 move_dir(Direction, ValidMoves) :-
     write('Valid Moves: '), write(ValidMoves), nl,
 
@@ -303,14 +303,15 @@ check_player_in_win_row(Player, Board) :-
     
 
 % Get player pieces coordinates
-
 get_player_pieces(Board, Player, Pieces) :-
     findall((X, Y), (nth1(Y, Board, Row), nth1(X, Row, Player)), Pieces).
 
+% Get player pieces count
 count_pieces(Board, Player, Count) :-
     findall(1, (member(Row, Board), member(Player, Row)), List),
     length(List, Count).
 
+% Check if player owns the pieces he has chosen to move
 check_positions(Board, Piece, (Col1, Row1), (Col2, Row2), (Col3, Row3)) :-
     nth1(Row1, Board, Row),
     nth1(Col1, Row, P1),

@@ -44,6 +44,7 @@ choose_difficulty(2, c2). % Hard
 % Play the game
 
 play(Player1, Player2) :-
+    write('Random number: '), random(1, 10, X), write(X), nl,
     initial_state(Board),
     display_game(Board),
     play(Player1, Player2, Board, 1).
