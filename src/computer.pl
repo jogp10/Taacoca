@@ -23,6 +23,8 @@ computer_easy_move(Board, Player, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction) :-
     (Length > 0 -> (X1 = X4, Y1 = Y4, X2 = X5, Y2 = Y5, X3 = X6, Y3 = Y6, random_member(Direction, ValidMoves), write('Computer selected direction: '), write(Direction), nl)
     ; computer_easy_move(Board, Player, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction)).
 
+
+% Select randomly pieces from the player's pieces
 pick_piece(0, _, _).
 pick_piece(0, _, []).
 pick_piece(Count, From, [X| Rest]) :-

@@ -23,7 +23,6 @@ direction_number(se, 6).
 direction_number(sw, 5).
 direction_number(w, 3).
 
-
 % Initiate the board
 /* e.g.
   -1 - out of bounds
@@ -41,8 +40,6 @@ initial_state(Board) :- Board =
         [-1,-1, 0, 0, 2, 2, 2, 0, 0],
         [-1,-1,-1, 0, 2, 2, 2, 2, 0],
         [-1,-1,-1,-1, 2, 2, 2, 2, 2]].
-      
-
 
 
 % Display the board
@@ -63,7 +60,6 @@ initial_state(Board) :- Board =
 display_game(Board) :-
     write('       1 2 3 4 5'), nl,
     display_game(Board, 1).
-
 display_game([], _).
 display_game([H|T], R) :-
     num_letter(R, RowLetter),
@@ -162,7 +158,6 @@ pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :-
     ((Count == 1, X5 = X4, Y5 = Y4, X6 = X4, Y6 = Y4);
     (Count == 2, X6 = X5, Y6 = Y5);true),
 
-
     (check_positions(Board, Player, (X4, Y4), (X5, Y5), (X6, Y6)) ->
      (X1 = X4, X2 = X5, X3 = X6, Y1 = Y4, Y2 = Y5, Y3 = Y6); write('Invalid positions!'), nl,
     pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3))).
@@ -182,7 +177,7 @@ move_dir(Direction, ValidMoves) :-
     (member(Dir, ValidMoves) -> Direction = NumDir; (write('Invalid direction!'), nl, move_dir(Direction, ValidMoves))).
 
 
-% Move a piece in the board
+% Remove a piece from the board
 remove_piece(Board, (FromRow, FromCol), (ToRow, ToCol), Piece, BoardWithoutPiece) :-
 
     % First, retrieve the piece at the source position
@@ -193,14 +188,14 @@ remove_piece(Board, (FromRow, FromCol), (ToRow, ToCol), Piece, BoardWithoutPiece
     replace(Row, FromCol, 0, NewRow),
     replace(Board, FromRow, NewRow, BoardWithoutPiece).
 
-   
-
+% Move a piece to one position
 move_piece(Board, (FromRow, FromCol), (ToRow, ToCol), Piece, NewBoard) :-
 
     % Place the piece at the destination position
     nth1(ToRow, Board, ToRowData),
     replace(ToRowData, ToCol, Piece, NewToRowData),
     replace(Board, ToRow, NewToRowData, NewBoard).
+
 
 % Replace an element in a list
 replace([_|T], 1, X, [X|T]).
@@ -309,10 +304,12 @@ check_player_in_win_row(Player, Board) :-
 get_player_pieces(Board, Player, Pieces) :-
     findall((X, Y), (nth1(Y, Board, Row), nth1(X, Row, Player)), Pieces).
 
+
 % Get player pieces count
 count_pieces(Board, Player, Count) :-
     findall(1, (member(Row, Board), member(Player, Row)), List),
     length(List, Count).
+
 
 % Check if player owns the pieces he has chosen to move
 check_positions(Board, Piece, (Col1, Row1), (Col2, Row2), (Col3, Row3)) :-

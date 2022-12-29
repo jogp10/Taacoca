@@ -3,8 +3,8 @@
 :- use_module(library(lists)).
 :- use_module(library(random)).
 
-% Display the main menu
 
+% Display the main menu
 play :-
     write('Welcome to the game!'), nl,
     write('Choose game mode:'), nl,
@@ -35,20 +35,17 @@ play :-
     play(C1, C2));
     (Option == 4 -> write('Bye!'), nl)).
 
-% Choose the computer difficulty
 
+% Choose the computer difficulty
 choose_difficulty(1, c1). % Easy
 choose_difficulty(2, c2). % Hard
 
 
 % Play the game
-
 play(Player1, Player2) :-
     initial_state(Board),
     display_game(Board),
     play(Player1, Player2, Board, 1).
-
-% Play the game
 
 play(Player1, Player2, Board, Turn) :-
     % Player 1 turn
@@ -67,7 +64,6 @@ play(Player1, Player2, Board, Turn) :-
     (Count >= 1 -> remove_piece(Board, (Y1, X1), (B, A), Piece, NewBoard);true),
     (Count >= 2 -> remove_piece(NewBoard, (Y2, X2), (D, C), Piece, NewBoard2);true),
     (Count >= 3 -> remove_piece(NewBoard2, (Y3, X3), (F, E), Piece, NewBoard4);true),
-
 
     ((Count == 1, New = NewBoard);
     (Count == 2, New = NewBoard2);
