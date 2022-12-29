@@ -164,7 +164,7 @@ pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :-
 
 
     (check_positions(Board, Player, (X4, Y4), (X5, Y5), (X6, Y6)) ->
-     (X1 = X4, X2 = X5, X3 = X6, Y1 = Y4, Y2 = Y5, Y3 = Y6); 
+     (X1 = X4, X2 = X5, X3 = X6, Y1 = Y4, Y2 = Y5, Y3 = Y6); write('Invalid positions!'), nl,
     pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3))).
   
 
@@ -179,11 +179,11 @@ move_dir(Direction, ValidMoves) :-
     write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves) '),
     read(NumDir),
     direction_number(Dir, NumDir),
-    (member(Dir, ValidMoves) -> Direction = NumDir; move_dir(Direction, ValidMoves)).
+    (member(Dir, ValidMoves) -> Direction = NumDir; (write('Invalid direction!'), nl, move_dir(Direction, ValidMoves))).
 
 
 % Move a piece in the board
-move_piece(Board, (FromRow, FromCol), (ToRow, ToCol), NewBoard) :-
+remove_piece(Board, (FromRow, FromCol), (ToRow, ToCol), Piece, BoardWithoutPiece) :-
 
     % First, retrieve the piece at the source position
     nth1(FromRow, Board, Row),
@@ -191,13 +191,16 @@ move_piece(Board, (FromRow, FromCol), (ToRow, ToCol), NewBoard) :-
 
     % Then, replace the source position with an empty space
     replace(Row, FromCol, 0, NewRow),
-    replace(Board, FromRow, NewRow, BoardWithoutPiece),
+    replace(Board, FromRow, NewRow, BoardWithoutPiece).
 
-    % Finally, place the piece at the destination position
-    nth1(ToRow, BoardWithoutPiece, ToRowData),
+   
+
+move_piece(Board, (FromRow, FromCol), (ToRow, ToCol), Piece, NewBoard) :-
+
+    % Place the piece at the destination position
+    nth1(ToRow, Board, ToRowData),
     replace(ToRowData, ToCol, Piece, NewToRowData),
-    replace(BoardWithoutPiece, ToRow, NewToRowData, NewBoard).
-
+    replace(Board, ToRow, NewToRowData, NewBoard).
 
 % Replace an element in a list
 replace([_|T], 1, X, [X|T]).
