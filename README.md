@@ -1,8 +1,7 @@
-# PFL_TP2_T2_06
-Prolog Programming (Second project work)
+# Game: Taacoca
 
- Game: Taacoca
     Group: 06
+    Class: 02
     Group members:
         - 202008133 - João de Oliveira Gigante Pinheiro
         - 202005103 - Ricardo Almeida Cavalheiro
@@ -45,18 +44,32 @@ valued. Game state representations and the implementation of flexible visualizat
 predicates will also be valued, for example, working for any size of the board, using an
 initial_state(+Size, -GameState) predicate that receives the size of the board as an
 argument and returns the initial state about the game.
+     //TODO
+     The game state view predicate, called display_game/1, is responsible for displaying the current state of the game to the user. It takes the current game state as an argument and displays the board and the pieces on it, as well as the current player and any captured pieces.
     
      - Moves Execution: Validation and execution of a move, obtaining the new state of the
 game. The predicate should be called move(+GameState, +Move, -NewGameState).
-    
+
+     The move predicate, called move/3, is responsible for executing a move in the game. It takes the current game state, the move to be executed, and returns the new game state after the move has been made.
+     The predicate first checks that the move is valid by calling the valid_moves/3 predicate, which returns a list of all the valid moves that can be made from the current game state. If the move is not valid, the predicate returns an error message. If the move is valid, the predicate will execute the move by removing the stones from the current position and placing them in the new position. If the move captures any opponent's stones, the predicate will remove them from the board.
+
      - List of Valid Moves: Obtaining a list of possible moves. The predicate should be called
 valid_moves(+GameState, +Player, -ListOfMoves).
+
+     The valid_moves predicate, called valid_moves/3, is responsible for generating a list of all the valid moves that can be made from the current game state. It takes the current game state and the player making the move as arguments, and returns a list of all the valid moves. The predicate calls the combination_size3/2, which returns all the possible combinations of 3 stones from the current game state, and then calls the findall/3, which checks if the combination with a possible direction is a valid move and returns it if it is.
     
      - End of Game: Verification of the end of the game, with identification of the winner. The
 predicate must be called game_over(+GameState, -Winner).
 
+     The game_over predicate, called game_over/2, is responsible for checking if the game is over. It takes the current game state as an argument and returns the winner of the game, if there is one. If the game is not over, it returns the atom 'none'.
+     The predicate first checks if the current player has any valid moves. If not, it checks if the player has any stones on the Win row or the opponent has no stones left. If neither, it will check the same for the player number 2. One condition is match and the game is over, the predicate returns the winner.
+
      - Board Evaluation: Form(s) of evaluating the state of the game. The predicate must be
 called value(+GameState, +Player, -Value).
+
+     The value predicate, called value/3, is responsible for evaluating the current game state. It takes the current game state and the player making the move as arguments, and returns a value representing the current state of the game. 
+     The value is calculated by counting the number of stones of each player, and subtracting the number of stones for the opponent from the number of stones for the player. This value is then multiplied by 3. The distance to the winning row is also taken into account, with each stone being worth 1 point for each row closer to the winning row.
+     A win is worth 100 points, and a loss is worth -100 points.
     
      - Computer move: Choice of the move to be performed by the computer, depending on
 the difficulty level. The predicate should be called choose_move(+GameState, +Player,
@@ -64,9 +77,16 @@ the difficulty level. The predicate should be called choose_move(+GameState, +Pl
 best move at the moment (greedy algorithm), taking into account the evaluation of the
 game state.
 
+     The computer_easy_move predicate, called computer_easy_move/3, is responsible for choosing the best move to be made by the easy difficulty computer. It takes the current game state and the player making the move and returns the best move to be made.
+     The predicate calls the random_member/2 predicate, which returns a random valid move.
+     If the difficulty level is hard, the computer_hard_move/3 is called. This predicate returns the best move to be made by the hard difficulty computer. It takes the current game state and the player making the move and returns the best move to be made. The predicates evaluates all the valid moves and returns the move with the highest value.
+    
+
  - Conclusions: Conclusions of the work, including limitations of the work developed (known issues), as
 well as possible improvements identified (roadmap) (up to 250 words);
 
- - Bibliography: Listing of books, articles, Web pages and other resources used during the development
+
+
+ - Bibliography
 https://www.iggamecenter.com/en/rules/taacoca
 https://glukkazan.github.io/breakthrough/taacoca.htm

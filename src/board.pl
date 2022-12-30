@@ -355,8 +355,14 @@ move(Board, [[(X1, Y1), (X2, Y2), (X3, Y3)], Direction], NewBoard) :-
 
 % Check if game is over
 game_over(Board, Winner) :-
-    ((check_player_in_win_row(1, Board); (count_pieces(Board, 2, Count2), Count2==0)), Winner = 1);
-    ((check_player_in_win_row(2, Board); (count_pieces(Board, 1, Count1), Count1==0)), Winner = 2);true.
+    ((valid_moves(Board, 2, ValidMoves2), length(ValidMoves2, Length2), Length2==0);
+    (check_player_in_win_row(1, Board); 
+    (count_pieces(Board, 2, Count2), Count2==0)), Winner = 1);
+
+    ((valid_moves(Board, 1, ValidMoves1), length(ValidMoves1, Length1), Length1==0);
+    (check_player_in_win_row(2, Board); (count_pieces(Board, 1, Count1), Count1==0)), 
+    Winner = 2);
+    Winner=none.
 
 
 % Evaluate game board

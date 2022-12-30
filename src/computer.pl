@@ -1,7 +1,7 @@
 :- ensure_loaded(board).
 
 % Select randomly three pieces from the board
-computer_easy_move(Board, Player, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction) :-
+computer_easy_move(Board, Player, [[(X1, Y1), (X2, Y2), (X3, Y3)], Direction]) :-
     valid_moves(Board, Player, ValidMoves),
     random_member([[(X1, Y1), (X2, Y2), (X3, Y3)], Direction], ValidMoves), write('Computer selected pieces: '), write([(Y1, X1), (Y2, X2), (Y3, X3)]), nl, write('Computer selected direction: '), write(Direction), nl.
 
@@ -18,7 +18,7 @@ pick_piece(Count, From, [X| Rest]) :-
 
 
 % Computer greedy algorithm
-computer_hard_move(Board, Player, Pieces, Direction) :-
+computer_hard_move(Board, Player, [Pieces, Direction]) :-
     valid_moves(Board, Player, ValidMoves),
 
     % calculate the value of the board after each move
