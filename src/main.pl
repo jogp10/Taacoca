@@ -48,83 +48,33 @@ play(Player1, Player2) :-
     play(Player1, Player2, Board, 1).
 
 play(Player1, Player2, Board, Turn) :-
-    % Player 1 turn
-    (Player1 == c1 -> write('Computer 1 turn:'), nl, computer_easy_move(Board, 1, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction);
-    (Player1 == p -> write('Player 1 turn (Pieces: X):'), nl, pieces_to_move(Board, 1, (X1, Y1), (X2, Y2), (X3, Y3)),
-    valid_moves(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], ValidMoves),
-
-    move_dir(Direction, ValidMoves))),
-
-    count_pieces(Board, 1, Count),
-    (Count >= 1 -> write('1') , nl, neighbor(X1, Y1, Direction, (A, B));true),
-    (Count >= 2 -> write('2') , nl, neighbor(X2, Y2, Direction, (C, D));true),
-    (Count >= 3 -> write('3') , nl, neighbor(X3, Y3, Direction, (E, F));true),
-    
-    % Remove pieces
-    (Count >= 1 -> remove_piece(Board, (Y1, X1), (B, A), Piece, NewBoard);true),
-    (Count >= 2 -> remove_piece(NewBoard, (Y2, X2), (D, C), Piece, NewBoard2);true),
-    (Count >= 3 -> remove_piece(NewBoard2, (Y3, X3), (F, E), Piece, NewBoard4);true),
-
-    ((Count == 1, New = NewBoard);
-    (Count == 2, New = NewBoard2);
-    (Count >= 3, New = NewBoard4)),
-
-    % Move pieces
-    (Count >= 1 -> move_piece(New, (Y1, X1), (B, A), Piece, NewB1);true),
-    (Count >= 2 -> move_piece(NewB1, (Y2, X2), (D, C), Piece, NewB2);true),
-    (Count >= 3 -> move_piece(NewB2, (Y3, X3), (F, E), Piece, NewB3);true),
-
-    ((Count == 1, NewBoard3 = NewB1);
-    (Count == 2, NewBoard3 = NewB2);
-    (Count >= 3, NewBoard3 = NewB3)),
-
-    display_game(NewBoard3),
-
-    %check if the game is over
-    count_pieces(NewBoard3, 2, Count_Win), 
-    (Count_Win == 0 -> (write('Player 1 wins!'), nl);
-    (check_player_in_win_row(1, NewBoard3) -> (write('Player 1 wins!'), nl);(
-
-
-    % Player 2 turn
-    (Player2 == c1 -> write('Computer 2 turn:'), nl, computer_easy_move(Board, 2, [(X4, Y4), (X5, Y5), (X6, Y6)], Direction2);
-    (Player2 == p -> write('Player 2 turn (Pieces: O):'), nl, pieces_to_move(Board, 2, (X4, Y4), (X5, Y5), (X6, Y6)),
-
-    valid_moves(NewBoard3, [(X4, Y4), (X5, Y5), (X6, Y6)], ValidMoves2),
-
-    move_dir(Direction2, ValidMoves2))),
-
-    count_pieces(NewBoard3, 2, Count2),
-    (Count2 >= 1 -> neighbor(X4, Y4, Direction2, (A2, B2));true),
-    (Count2 >= 2 -> neighbor(X5, Y5, Direction2, (C2, D2));true),
-    (Count2 >= 3 -> neighbor(X6, Y6, Direction2, (E2, F2));true),
-
-    % Remove pieces
-    (Count2 >= 1 -> remove_piece(NewBoard3, (Y4, X4), (B2, A2), Piece2, NewBoard5);true),
-    (Count2 >= 2 -> remove_piece(NewBoard5, (Y5, X5), (D2, C2), Piece2, NewBoard7);true),
-    (Count2 >= 3 -> remove_piece(NewBoard7, (Y6, X6), (F2, E2), Piece2, NewBoard8);true),
-
-    ((Count2 == 1, New2 = NewBoard5);
-    (Count2 == 2, New2 = NewBoard7);
-    (Count2 >= 3, New2 = NewBoard8)),
-   
-    % Move pieces
-    (Count2 >= 1 -> move_piece(New2, (Y4, X4), (B2, A2), Piece2, N1);true),
-    (Count2 >= 2 -> move_piece(N1, (Y5, X5), (D2, C2), Piece2, N2);true),
-    (Count2 >= 3 -> move_piece(N2, (Y6, X6), (F2, E2), Piece2, N3);true),
-
-    ((Count2 == 1, NewBoard6 = N1);
-    (Count2 == 2, NewBoard6 = N2);
-    (Count2 >= 3, NewBoard6 = N3)),
-
-    display_game(NewBoard6),
-
-    %check if the game is over
-    count_pieces(NewBoard6, 1, Count_Win_), 
-    (Count_Win_ == 0 -> (write('Player 2 wins!'), nl);
-    (check_player_in_win_row(2, NewBoard6) -> write('Player 2 wins!'), nl);(
-
-    % move(NewBoard, X1, Y1, X2, Y2, NewBoard2, Player2),
     write('Turn: '), write(Turn), nl,
     NewTurn is Turn + 1,
-    play(Player1, Player2, NewBoard6, NewTurn)))))).
+
+    % Player 1 turn
+    (Player1 == c1 -> write('Computer 1 turn:'), nl, computer_easy_move(Board, 1, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction);
+    (Player1 == p -> write('Player 1 turn (Pieces: X):'), nl, pieces_to_move(Board, 1, (X1, Y1), (X2, Y2), (X3, Y3)), move_dir(Direction))),
+
+    move(Board, [[(X1, Y1), (X2, Y2), (X3, Y3)], Direction], NewBoard),
+
+    display_game(NewBoard),
+
+    %check if the game is over
+    game_over(NewBoard, Winner),
+    (Winner == 1 -> (write('Player 1 wins!'), nl);
+    (Winner == 2 -> (write('Player 2 wins!'), nl);(
+
+    % Player 2 turn
+    (Player2 == c1 -> write('Computer 2 turn:'), nl, computer_easy_move(NewBoard, 2, [(X4, Y4), (X5, Y5), (X6, Y6)], Direction2);
+    (Player2 == p -> write('Player 2 turn (Pieces: O):'), nl, pieces_to_move(NewBoard, 2, (X4, Y4), (X5, Y5), (X6, Y6)), move_dir(Direction2))),
+
+    move(NewBoard, [[(X4, Y4), (X5, Y5), (X6, Y6)], Direction2], EndTurnBoard),
+
+    display_game(EndTurnBoard),
+
+    %check if the game is over
+    game_over(EndTurnBoard, Winner),
+    (Winner == 1 -> (write('Player 1 wins!'), nl);
+    (Winner == 2 -> (write('Player 2 wins!'), nl);
+
+    play(Player1, Player2, EndTurnBoard, NewTurn)))))).
