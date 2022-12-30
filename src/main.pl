@@ -53,7 +53,8 @@ play(Player1, Player2, Board, Turn) :-
 
     % Player 1 turn
     (Player1 == c1 -> write('Computer 1 turn:'), nl, computer_easy_move(Board, 1, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction);
-    (Player1 == p -> write('Player 1 turn (Pieces: X):'), nl, pieces_to_move(Board, 1, (X1, Y1), (X2, Y2), (X3, Y3)), move_dir(Direction))),
+    (Player1 == c2 -> write('Computer 1 turn:'), nl, computer_hard_move(Board, 1, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction);
+    (Player1 == p -> write('Player 1 turn (Pieces: X):'), nl, pieces_to_move(Board, 1, (X1, Y1), (X2, Y2), (X3, Y3)), move_dir(Direction)))),
 
     move(Board, [[(X1, Y1), (X2, Y2), (X3, Y3)], Direction], NewBoard),
 
@@ -66,8 +67,13 @@ play(Player1, Player2, Board, Turn) :-
 
     % Player 2 turn
     (Player2 == c1 -> write('Computer 2 turn:'), nl, computer_easy_move(NewBoard, 2, [(X4, Y4), (X5, Y5), (X6, Y6)], Direction2);
-    (Player2 == p -> write('Player 2 turn (Pieces: O):'), nl, pieces_to_move(NewBoard, 2, (X4, Y4), (X5, Y5), (X6, Y6)), move_dir(Direction2))),
+    (Player2 == c2 -> write('Computer 2 turn:'), nl, computer_hard_move(NewBoard, 2, [(X4, Y4), (X5, Y5), (X6, Y6)], Direction2);
+    (Player2 == p -> write('Player 2 turn (Pieces: O):'), nl, pieces_to_move(NewBoard, 2, (X4, Y4), (X5, Y5), (X6, Y6)), move_dir(Direction2)))),
 
+    write('Moving pieces player 2'), nl,
+    write('Piece 1: '), write((X4, Y4)), nl,
+    write('Piece 2: '), write((X5, Y5)), nl,
+    write('Piece 3: '), write((X6, Y6)), nl,
     move(NewBoard, [[(X4, Y4), (X5, Y5), (X6, Y6)], Direction2], EndTurnBoard),
 
     display_game(EndTurnBoard),
@@ -76,5 +82,5 @@ play(Player1, Player2, Board, Turn) :-
     game_over(EndTurnBoard, Winner),
     (Winner == 1 -> (write('Player 1 wins!'), nl);
     (Winner == 2 -> (write('Player 2 wins!'), nl);
-
+    write('Press any key to continue...'), nl,
     play(Player1, Player2, EndTurnBoard, NewTurn)))))).

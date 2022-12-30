@@ -388,7 +388,7 @@ value(Board, Player, Value) :-
 sum_distances_to_win_row([], _, _, 0).
 sum_distances_to_win_row([(X, Y)|T], Player, Board, Sum) :-
     sum_distances_to_win_row(T, Player, Board, Sum1),
-    (Player == 1 -> Sum is Sum1 + 9 - Y; Sum is Sum1 + Y - 1).
+    (Player == 1 -> Sum is Sum1 + Y - 1; Sum is Sum1 + 9 - Y).
 
 
 % Get all posible picks for a player
