@@ -22,7 +22,7 @@ play :-
     read(Difficulty),
     choose_difficulty(Difficulty, C),
     play(p, C));
-    (Option == 2 -> 
+    (Option == 3 -> 
     write('Choose the difficulty:'), nl,
     write('1. Easy'), nl,
     write('2. Hard'), nl,
