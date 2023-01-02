@@ -139,17 +139,23 @@ well as possible improvements identified (roadmap) (up to 250 words);
 
      In this project, we developed a board game in Prolog called Taacoca. The game implemented the unique rules and gameplay mechanics of Taacoca, including movement of the pieces, capture of opponent's pieces and the end of the game.
      Overall, the game was functional and allowed users to play Taacoca against the computer or another player. However, there were some limitations to the project. The game's user interface was basic, with only text-based representations of the game board and pieces.
-     In future work, it would be interesting to enhance the user interface with more visually appealing graphics. Additionally, optimizing the performance of the game for larger board sizes and more complex variations of the game could be a worthwhile goal.
-     Overall, this project was a valuable learning experience and provided an opportunity to apply our knowledge of Prolog to the development of a unique and enjoyable board game.
+     
      Some of the issues we faced were:
-     -Performance: Board games can be computationally intensive, and Prolog can struggle with the performance demands of larger board sizes or more complex variations of the game. This can lead to slow or unresponsive gameplay.
-     -Complexity: Board games can have a large number of rules and interactions to implement, which can make the Prolog code challenging to write and maintain.
-     -Debugging: Debugging Prolog code can be difficult due to the logic-based nature of the language. This can make it challenging to identify and fix errors in the game logic.
-     -User interface: Creating a visually appealing and intuitive user interface can be difficult in Prolog, as the language is not well-suited to graphical output.
-     -AI: Implementing a strong artificial intelligence for the computer player can be a challenging task, especially for more complex board games.
+     
+     - Performance: Board games can be computationally intensive, and Prolog can struggle with the performance demands of larger board sizes or more complex variations of the game. This can lead to slow or unresponsive gameplay.
+     
+     - Complexity: Board games can have a large number of rules and interactions to implement, which can make the Prolog code challenging to write and maintain.
+     
+     - Debugging: Debugging Prolog code can be difficult due to the logic-based nature of the language. This can make it challenging to identify and fix errors in the game logic.
+     
+     - User interface: Creating a visually appealing and intuitive user interface can be difficult in Prolog, as the language is not well-suited to graphical output.
+     
+     - AI: Implementing a strong artificial intelligence for the computer player can be a challenging task, especially for more complex board games.
      Overall, developing board games in Prolog can be a rewarding but challenging task that requires careful planning and attention to performance and usability.
 
-
+    In future work, it would be interesting to enhance the user interface with more visually appealing graphics. Additionally, optimizing the performance of the game for larger board sizes and more complex variations of the game could be a worthwhile goal.
+    Overall, this project was a valuable learning experience and provided an opportunity to apply our knowledge of Prolog to the development of a unique and enjoyable board game.
+     
  - Bibliography
 https://www.iggamecenter.com/en/rules/taacoca
 https://glukkazan.github.io/breakthrough/taacoca.htm
