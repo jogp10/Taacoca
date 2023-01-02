@@ -1,6 +1,6 @@
 # Game: Taacoca
 
-    Group: 06
+    Group: Taacoca_04
     Class: 02
     Group members:
         - 202008133 - João de Oliveira Gigante Pinheiro
@@ -27,7 +27,7 @@
  - ## Game Logic:
      - ##### Internal representation of the state of the game:
 
-        The game has two players and their pieces are represented internally by 1 and 2 and displayed to the user using 'X' and 'O'. A blank cell is represented by a 0 and outside of the board has a 2.
+        The game has two players and their pieces are represented internally by 1 and 2 and displayed to the user using 'X' and 'O'. A blank cell is represented by a 0 and outside of the board has a -1.
         
         The board is represented by a list of lists, where each inner list represents a row of the game board and each element of the inner list represents a cell on the    board. A message is displayed when each player has their chance to move, requesting the positions of the pieces and the direction they want them to move. When pieces are captured they are removed from the board.
         
