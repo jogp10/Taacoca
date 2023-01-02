@@ -35,6 +35,52 @@ information that may be needed (depending on the game). It should include exampl
 the Prolog representation of initial, intermediate and final game states, and an indication
 of the meaning of each atom (ie., how the different pieces represent).
 
+    The game has two players and their pieces are represented internally by 1 and 2 and displayed to the user using 'X' and 'O'. A blank cell is represented by a 0 and outside of the board has a 2.
+    The board is represented by a list of lists, where each inner list represents a row of the game board and each element of the inner list represents a cell on the    board. A message is displayed when each player has their chance to move, requesting the positions of the pieces and the direction they want them to move. When pieces are captured they are removed from the board.
+    ```
+    Initial state of the game:
+    
+     [[1 , 1, 1, 1, 1,-1,-1,-1,-1],
+      [0 , 1, 1, 1, 1, 0,-1,-1,-1],
+      [0 , 0, 1, 1, 1, 0, 0,-1,-1],
+      [0 , 0, 0, 0, 0, 0, 0, 0,-1],
+      [0 , 0, 0, 0, 0, 0, 0, 0, 0],
+      [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+      [-1,-1, 0, 0, 2, 2, 2, 0, 0],
+      [-1,-1,-1, 0, 2, 2, 2, 2, 0],
+      [-1,-1,-1,-1, 2, 2, 2, 2, 2]]
+    ```
+     ```
+    Intermediate state of the game:
+    Player 1 has 9 pieces remaining..
+    Player 2 has 8 pieces remaining..
+    
+     [[0 , 0, 0, 0, 0,-1,-1,-1,-1],
+      [0 , 0, 1, 1, 0, 0,-1,-1,-1],
+      [0 , 0, 1, 1, 1, 0, 0,-1,-1],
+      [0 , 0, 0, 1, 0, 0, 0, 0,-1],
+      [0 , 0, 2, 1, 1, 1, 0, 0, 0],
+      [-1, 0, 2, 2, 0, 0, 0, 0, 0],
+      [-1,-1, 2, 2, 0, 2, 0, 0, 0],
+      [-1,-1,-1, 0, 0, 0, 0, 2, 0],
+      [-1,-1,-1,-1, 0, 0, 0, 2, 0]]
+    ```
+     ```
+    Final state of the game:
+    Player 1 has reached the end of the Board.
+    Player 1 WON.
+    
+      [[0 , 0, 0, 0, 0,-1,-1,-1,-1],
+       [0 , 0, 1, 0, 1, 0,-1,-1,-1],
+       [0 , 0, 0, 0, 0, 0, 0,-1,-1],
+       [0 , 0, 0, 1, 0, 0, 0, 0,-1],
+       [0 , 0, 0, 1, 1, 1, 0, 0, 0],
+       [-1, 0, 0, 2, 0, 0, 0, 0, 0],
+       [-1,-1, 0, 0, 0, 0, 2, 0, 0],
+       [-1,-1,-1, 0, 1, 0, 2, 2, 0],
+       [-1,-1,-1,-1, 1, 0, 0, 0, 0]]
+    ```
+
      - Game state view: description of the implementation of the game state view predicate. It
 may include information about the created menu system, as well as user interaction,
 including forms of input validation. The display predicate should be called
@@ -44,8 +90,14 @@ valued. Game state representations and the implementation of flexible visualizat
 predicates will also be valued, for example, working for any size of the board, using an
 initial_state(+Size, -GameState) predicate that receives the size of the board as an
 argument and returns the initial state about the game.
-     //TODO
+    
      The game state view predicate, called display_game/1, is responsible for displaying the current state of the game to the user. It takes the current game state as an argument and displays the board and the pieces on it, as well as the current player and any captured pieces.
+     The predicate checks if the game has ended by calling the game_over/2 predicate, which returns true if the game has ended and false otherwise. If the game has ended, the predicate displays a message indicating which player has won. If the game has not ended, the predicate displays the current player and the number of pieces each player has remaining. It then displays the board and the pieces on it.
+     There is a Menu System at the beginning of the game where the user must choose to play one of the following game modes: Player vs Player; Player vs Computer;
+     Besides that, there is a game mode where the user can watch the game being played by two computers (AI vs AI). 
+     The user can also choose the difficulty of the computer, which can be easy or hard.
+     We implemented input validation so that the user can only choose positions of the board where he has pieces and the game also checks if the direction he provided is valid.
+
     
      - Moves Execution: Validation and execution of a move, obtaining the new state of the
 game. The predicate should be called move(+GameState, +Move, -NewGameState).
@@ -56,7 +108,7 @@ game. The predicate should be called move(+GameState, +Move, -NewGameState).
      - List of Valid Moves: Obtaining a list of possible moves. The predicate should be called
 valid_moves(+GameState, +Player, -ListOfMoves).
 
-     The valid_moves predicate, called valid_moves/3, is responsible for generating a list of all the valid moves that can be made from the current game state. It takes the current game state and the player making the move as arguments, and returns a list of all the valid moves. The predicate calls the combination_size3/2, which returns all the possible combinations of 3 stones from the current game state, and then calls the findall/3, which checks if the combination with a possible direction is a valid move and returns it if it is.
+     The valid_moves predicate, called valid_moves/3, is responsible for generating a list of all the valid moves that can be made from the current game state. It takes the current game state and the player making the move as arguments and returns a list of all the valid moves. The predicate calls the combination_size3/2, which returns all the possible combinations of 3 stones from the current game state, and then calls the findall/3, which checks if the combination with a possible direction is a valid move and returns it if it is.
     
      - End of Game: Verification of the end of the game, with identification of the winner. The
 predicate must be called game_over(+GameState, -Winner).
@@ -67,8 +119,8 @@ predicate must be called game_over(+GameState, -Winner).
      - Board Evaluation: Form(s) of evaluating the state of the game. The predicate must be
 called value(+GameState, +Player, -Value).
 
-     The value predicate, called value/3, is responsible for evaluating the current game state. It takes the current game state and the player making the move as arguments, and returns a value representing the current state of the game. 
-     The value is calculated by counting the number of stones of each player, and subtracting the number of stones for the opponent from the number of stones for the player. This value is then multiplied by 3. The distance to the winning row is also taken into account, with each stone being worth 1 point for each row closer to the winning row.
+     The value predicate, called value/3, is responsible for evaluating the current game state. It takes the current game state and the player making the move as arguments and returns a value representing the current state of the game. 
+     The value is calculated by counting the number of stones of each player and subtracting the number of stones for the opponent from the number of stones for the player. This value is then multiplied by 3. The distance to the winning row is also taken into account, with each stone being worth 1 point for each row closer to the winning row.
      A win is worth 100 points, and a loss is worth -100 points.
     
      - Computer move: Choice of the move to be performed by the computer, depending on
@@ -85,8 +137,25 @@ game state.
  - Conclusions: Conclusions of the work, including limitations of the work developed (known issues), as
 well as possible improvements identified (roadmap) (up to 250 words);
 
+     In this project, we developed a board game in Prolog called Taacoca. The game implemented the unique rules and gameplay mechanics of Taacoca, including movement of the pieces, capture of opponent's pieces and the end of the game.
+     Overall, the game was functional and allowed users to play Taacoca against the computer or another player. However, there were some limitations to the project. The game's user interface was basic, with only text-based representations of the game board and pieces.
+     
+     Some of the issues we faced were:
+     
+     - Performance: Board games can be computationally intensive, and Prolog can struggle with the performance demands of larger board sizes or more complex variations of the game. This can lead to slow or unresponsive gameplay.
+     
+     - Complexity: Board games can have a large number of rules and interactions to implement, which can make the Prolog code challenging to write and maintain.
+     
+     - Debugging: Debugging Prolog code can be difficult due to the logic-based nature of the language. This can make it challenging to identify and fix errors in the game logic.
+     
+     - User interface: Creating a visually appealing and intuitive user interface can be difficult in Prolog, as the language is not well-suited to graphical output.
+     
+     - AI: Implementing a strong artificial intelligence for the computer player can be a challenging task, especially for more complex board games.
+     Overall, developing board games in Prolog can be a rewarding but challenging task that requires careful planning and attention to performance and usability.
 
-
+    In future work, it would be interesting to enhance the user interface with more visually appealing graphics. Additionally, optimizing the performance of the game for larger board sizes and more complex variations of the game could be a worthwhile goal.
+    Overall, this project was a valuable learning experience and provided an opportunity to apply our knowledge of Prolog to the development of a unique and enjoyable board game.
+     
  - Bibliography
 https://www.iggamecenter.com/en/rules/taacoca
 https://glukkazan.github.io/breakthrough/taacoca.htm
