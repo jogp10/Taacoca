@@ -164,14 +164,18 @@ pieces_to_move(Board, Player, (X1, Y1), (X2, Y2), (X3, Y3)) :-
   
 
 % Choose moving direction from valid directions
-move_dir(Direction) :-
+move_dir(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction) :-
+    valid_moves_pieces(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], ValidMoves),
+    write('Valid moves: '), write(ValidMoves), nl,
+    write('Choose a direction to move:'), nl,
     write('   North-West(1)    North-East(2)'), nl,
     write('West(3)                       East(4)'), nl,
     write('   South-West(5)    South-East(6)'), nl,
 
     write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves) '),
     read(DirNum),
-    direction_number(Direction, DirNum).
+    (member(DirNum, ValidMoves) -> direction_number(Direction, DirNum); write('Invalid direction!'), nl,
+    move_dir(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction)).
 
 % Remove a piece from the board
 remove_piece(Board, (FromRow, FromCol), BoardWithoutPiece) :-
