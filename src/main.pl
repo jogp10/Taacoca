@@ -10,8 +10,9 @@ play :-
     write('Choose game mode:'), nl,
     write('1. Player vs Player'), nl,
     write('2. Player vs Computer'), nl,
-    write('3. Computer vs Computer'), nl,
-    write('4. Exit'), nl,
+    write('3. Computer vs Player'), nl,
+    write('4. Computer vs Computer'), nl,
+    write('5. Exit'), nl,
     read(Option),
     ((Option == 1 -> play(p, p));
     (Option == 2 -> 
@@ -21,7 +22,14 @@ play :-
     read(Difficulty),
     choose_difficulty(Difficulty, C),
     play(p, C));
-    (Option == 3 -> 
+    (Option == 2 -> 
+    write('Choose the difficulty:'), nl,
+    write('1. Easy'), nl,
+    write('2. Hard'), nl,
+    read(Difficulty),
+    choose_difficulty(Difficulty, C),
+    play(C, p));
+    (Option == 4 -> 
     write('Choose the difficulty for Computer 1:'), nl,
     write('1. Easy'), nl,
     write('2. Hard'), nl,
@@ -33,7 +41,7 @@ play :-
     read(Difficulty2),
     choose_difficulty(Difficulty2, C2),
     play(C1, C2));
-    (Option == 4 -> write('Bye!'), nl); play).
+    (Option == 5 -> write('Bye!'), nl); play).
 
 
 % Choose the computer difficulty
