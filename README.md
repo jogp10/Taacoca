@@ -35,6 +35,52 @@ information that may be needed (depending on the game). It should include exampl
 the Prolog representation of initial, intermediate and final game states, and an indication
 of the meaning of each atom (ie., how the different pieces represent).
 
+    The game has 2 players and their pieces are represented internally by 1 and 2 and displayed to the user using 'X' and 'O'. A blank cell is represented by a 0 and outside of the board has a 2.
+    The board is represented by a list of lists, where each inner list represents a row of the game board and each element of the inner list represents a cell on the    board. A message is displayed when each player has their chance to move, requesting the positions of the pieces and the direction they want them to move. When pieces are captured they are removed from the board.
+    ```
+    Initial state of the game:
+    
+     [[1 , 1, 1, 1, 1,-1,-1,-1,-1],
+      [0 , 1, 1, 1, 1, 0,-1,-1,-1],
+      [0 , 0, 1, 1, 1, 0, 0,-1,-1],
+      [0 , 0, 0, 0, 0, 0, 0, 0,-1],
+      [0 , 0, 0, 0, 0, 0, 0, 0, 0],
+      [-1, 0, 0, 0, 0, 0, 0, 0, 0],
+      [-1,-1, 0, 0, 2, 2, 2, 0, 0],
+      [-1,-1,-1, 0, 2, 2, 2, 2, 0],
+      [-1,-1,-1,-1, 2, 2, 2, 2, 2]]
+    ```
+     ```
+    Intermediate state of the game:
+    Player 1 has 9 pieces remaining..
+    Player 2 has 8 pieces remaining..
+    
+     [[0 , 0, 0, 0, 0,-1,-1,-1,-1],
+      [0 , 0, 1, 1, 0, 0,-1,-1,-1],
+      [0 , 0, 1, 1, 1, 0, 0,-1,-1],
+      [0 , 0, 0, 1, 0, 0, 0, 0,-1],
+      [0 , 0, 2, 1, 1, 1, 0, 0, 0],
+      [-1, 0, 2, 2, 0, 0, 0, 0, 0],
+      [-1,-1, 2, 2, 0, 2, 0, 0, 0],
+      [-1,-1,-1, 0, 0, 0, 0, 2, 0],
+      [-1,-1,-1,-1, 0, 0, 0, 2, 0]]
+    ```
+     ```
+    Final state of the game:
+    Player 1 has reached the end of the Board.
+    Player 1 WON.
+    
+      [[0 , 0, 0, 0, 0,-1,-1,-1,-1],
+       [0 , 0, 1, 0, 1, 0,-1,-1,-1],
+       [0 , 0, 0, 0, 0, 0, 0,-1,-1],
+       [0 , 0, 0, 1, 0, 0, 0, 0,-1],
+       [0 , 0, 0, 1, 1, 1, 0, 0, 0],
+       [-1, 0, 0, 2, 0, 0, 0, 0, 0],
+       [-1,-1, 0, 0, 0, 0, 2, 0, 0],
+       [-1,-1,-1, 0, 1, 0, 2, 2, 0],
+       [-1,-1,-1,-1, 1, 0, 0, 0, 0]]
+    ```
+
      - Game state view: description of the implementation of the game state view predicate. It
 may include information about the created menu system, as well as user interaction,
 including forms of input validation. The display predicate should be called
