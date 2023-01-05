@@ -30,8 +30,6 @@ computer_hard_move(Board, Player, [Pieces, Direction]) :-
     % Find the element with the maximum value
     max_member(MaxValue, Values),
     max_member([MaxValue, Pieces, Direction], ValueMoves).
-    write('Computer selected pieces: '), write(Pieces), nl, write('Computer selected direction: '), write(Direction), nl.
-
 
 % Calculate the value of the board after each move
 value_moves(_, [], _, []).

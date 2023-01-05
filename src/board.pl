@@ -174,8 +174,8 @@ move_dir(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction) :-
 
     write('Enter the direction in which you want to move (Choose from 1 to 6, according to the valid moves) '),
     read(DirNum),
-    (member(DirNum, ValidMoves) -> direction_number(Direction, DirNum); write('Invalid direction!'), nl,
-    move_dir(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction)).
+    (((direction_number(DirLetter, DirNum), member(DirLetter, ValidMoves)); member(DirNum, ValidMoves))-> direction_number(Direction, DirNum); (write('Invalid direction!'), nl,
+    move_dir(Board, [(X1, Y1), (X2, Y2), (X3, Y3)], Direction))).
 
 % Remove a piece from the board
 remove_piece(Board, (FromRow, FromCol), BoardWithoutPiece) :-
